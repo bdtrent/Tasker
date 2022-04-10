@@ -1,0 +1,43 @@
+<div class="col-md-12">
+  <div class="card card-container">
+    <form
+      *ngIf="!isSuccessful"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="name">Group Name</label>
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          [(ngModel)]="form.name"
+          required
+          minlength="3"
+          maxlength="40"
+          #name="ngModel"
+        />
+        <div class="alert-danger" *ngIf="name.errors && f.submitted">
+          <div *ngIf="name.errors['required']">Group Name is required</div>
+          <div *ngIf="name.errors['minlength']">
+            Group Name must be at least 3 characters
+          </div>
+          <div *ngIf="name.errors['maxlength']">
+            Group Name must be at most 40 characters
+          </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block">Create Group</button>
+      </div>
+      <div class="alert alert-warning" *ngIf="f.submitted && isCreateFailed">
+        Creation failed!<br />{{ errorMessage }}
+      </div>
+    </form>
+    <div class="alert alert-success" *ngIf="isSuccessful">
+      Your group was successfully created!
+    </div>
+  </div>
+</div>
