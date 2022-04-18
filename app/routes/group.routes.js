@@ -7,7 +7,5 @@ module.exports = function(app) {
         );
         next();
     });
-    app.post("/api/group/create",
-        controller.creategroup
-    );
+    app.post("/api/group/create", controller.creategroup);
 };

@@ -19,10 +19,9 @@ export class CreateGroupComponent implements OnInit {
   ngOnInit(): void {
   }
   onSubmit(): void{
-    const name = this.form.name;
-    const owner_name = this.groupService.getUser().name
-    const members = [owner_name];
-    this.groupService.create(name, owner_name, members).subscribe({
+    const {name} = this.form;
+    const owner_name = this.groupService.getUser().username;
+    this.groupService.create(name, owner_name).subscribe({
       next: data =>{
         console.log(data);
         this.isSuccessful = true;
