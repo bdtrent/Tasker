@@ -12,10 +12,16 @@
         <a href="/mod" class="nav-link" routerLink="mod" style="color: #44867b;">Moderator Board</a>
       </li>
       <li class="nav-item" *ngIf="isLoggedIn">
-        <a href="/creategroup" class="nav-link" routerLink="creategroup" style="color: #44867b;">Create New Group</a>
-      </li>
-      <li class="nav-item">
         <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user" style="color: #44867b;">User</a>
+      </li>
+      <li class="nav-item dropdown" *ngIf="isLoggedIn">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+          Groups
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <li><a class="dropdown-item" href="/groups">My Groups</a></li>
+          <li><a class="dropdown-item" href="/creategroup">Create New Group</a></li>
+        </ul>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
@@ -39,3 +45,5 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+

@@ -13,6 +13,7 @@ import { BoardModeratorComponent } from './board-moderator/board-moderator.compo
 import { BoardUserComponent } from './board-user/board-user.component';
 import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 import { CreateGroupComponent } from './create-group/create-group.component';
+import { BoardGroupsComponent } from './board-groups/board-groups.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { CreateGroupComponent } from './create-group/create-group.component';
     BoardAdminComponent,
     BoardModeratorComponent,
     BoardUserComponent,
-    CreateGroupComponent
+    CreateGroupComponent,
+    BoardGroupsComponent
   ],
   imports: [
     BrowserModule,
