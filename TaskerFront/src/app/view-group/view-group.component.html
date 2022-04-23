@@ -1,0 +1,18 @@
+<div class ="container">
+    <header class="jumbotron">
+        <h3>
+            <strong>{{ group.name }}</strong>
+        </h3>
+    </header>
+    <p>
+        <strong>Owner:</strong> {{group.owner_name}}
+    </p>
+    <p>
+        <strong>Users:</strong>
+    </p>
+    <ul>
+        <li *ngFor="let user of groupusers">
+            {{ user.username }}
+        </li>
+    </ul>
+</div>

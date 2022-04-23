@@ -9,6 +9,8 @@ import { BoardModeratorComponent } from './board-moderator/board-moderator.compo
 import { BoardAdminComponent } from './board-admin/board-admin.component';
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { BoardGroupsComponent } from './board-groups/board-groups.component';
+import { ViewGroupComponent } from './view-group/view-group.component';
+
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
@@ -19,6 +21,7 @@ const routes: Routes = [
   { path: 'admin', component: BoardAdminComponent },
   { path: 'groups', component: BoardGroupsComponent },
   { path: 'creategroup', component: CreateGroupComponent},
+  { path: 'group/:groupname', component: ViewGroupComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full' }
 ];
 @NgModule({

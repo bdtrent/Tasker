@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 const GROUP_API = 'http://localhost:8080/api/group/';
 const USER_KEY = 'auth-user';
@@ -18,6 +18,14 @@ export class GroupService {
       name,
       owner_name
     }, httpOptions);
+  }
+  getGroup(name: string): Observable<any> {
+    const options = {params: new HttpParams().set('name', name)};
+    return this.http.get(GROUP_API + 'get', options);
+  }
+  getGroupUsers(name: string): Observable<any> {
+    const options = {params: new HttpParams().set('name', name)};
+    return this.http.get(GROUP_API + 'getusers', options);
   }
   public getUser(): any {
     const user = window.sessionStorage.getItem(USER_KEY);

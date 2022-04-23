@@ -1,8 +1,8 @@
 <div class="container">
     <header class="jumbotron">
       <ul>
-          <li *ngFor="let group of content">
-              {{group.name}}
+          <li *ngFor="let groups of content">
+            <a [routerLink]="['/group/', groups.name]">{{groups.name}}</a>
           </li>
       </ul>
     </header>

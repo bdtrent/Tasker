@@ -1,4 +1,5 @@
 const controller = require("../controllers/group.controller");
+const {authJwt} = require("../middleware");
 module.exports = function(app) {
     app.use(function(req, res, next) {
         res.header(
@@ -7,5 +8,7 @@ module.exports = function(app) {
         );
         next();
     });
-    app.post("/api/group/create", controller.creategroup);
+    app.post("/api/group/create", [authJwt.verifyToken], controller.creategroup);
+    app.get("/api/group/get", [authJwt.verifyToken], controller.getGroup);
+    app.get("api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
 };

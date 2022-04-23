@@ -14,6 +14,7 @@ import { BoardUserComponent } from './board-user/board-user.component';
 import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { BoardGroupsComponent } from './board-groups/board-groups.component';
+import { ViewGroupComponent } from './view-group/view-group.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { BoardGroupsComponent } from './board-groups/board-groups.component';
     BoardModeratorComponent,
     BoardUserComponent,
     CreateGroupComponent,
-    BoardGroupsComponent
+    BoardGroupsComponent,
+    ViewGroupComponent
   ],
   imports: [
     BrowserModule,

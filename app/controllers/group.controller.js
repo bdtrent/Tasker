@@ -22,3 +22,30 @@ exports.creategroup = (req, res) => {
         res.status(500).send({ message: err.message });
     });
 };
+exports.getGroup = (req, res) => {
+    Group.findOne({
+        where: {
+            name: req.query.name
+        }
+    }).then(group => {
+        res.status(200).send(group);
+    })
+    .catch(err => {
+        res.status(500).send({message: err.message});
+    })
+};
+
+exports.getGroupUsers = (req, res) => {
+    Group.findOne({
+        where: {
+            name: req.query.name
+        }
+    }).then(group => {
+        group.getUsers().then(users => {
+            res.status(200).send(users);
+        })
+    })
+    .catch(err => {
+        res.status(500).send({message: err.message});
+    })
+};
