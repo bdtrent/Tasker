@@ -10,5 +10,5 @@ module.exports = function(app) {
     });
     app.post("/api/group/create", [authJwt.verifyToken], controller.creategroup);
     app.get("/api/group/get", [authJwt.verifyToken], controller.getGroup);
-    app.get("api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
+    app.get("/api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
 };

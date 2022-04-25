@@ -32,9 +32,8 @@ exports.getGroup = (req, res) => {
     })
     .catch(err => {
         res.status(500).send({message: err.message});
-    })
+    });
 };
-
 exports.getGroupUsers = (req, res) => {
     Group.findOne({
         where: {
@@ -43,9 +42,9 @@ exports.getGroupUsers = (req, res) => {
     }).then(group => {
         group.getUsers().then(users => {
             res.status(200).send(users);
-        })
+        });
     })
     .catch(err => {
         res.status(500).send({message: err.message});
-    })
+    });
 };

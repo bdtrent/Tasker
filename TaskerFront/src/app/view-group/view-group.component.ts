@@ -15,11 +15,15 @@ export class ViewGroupComponent implements OnInit {
    }
   group: any;
   groupusers: any[] = [];
+  isOwner = false;
 
   ngOnInit(): void {
     this.groupService.getGroup(this.groupname).subscribe(
       data => {
         this.group = data;
+        if(this.groupService.getUser().username == this.group.owner_name) {
+          this.isOwner = true;
+        }
       },
       err => {
         this.group = JSON.parse(err.error).message;
