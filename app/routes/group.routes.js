@@ -10,6 +10,8 @@ module.exports = function(app) {
     });
     app.post("/api/group/create", [authJwt.verifyToken], controller.creategroup);
     app.post("/api/group/adduser", [authJwt.verifyToken], controller.addUser);
+    app.post("/api/group/removeuser", [authJwt.verifyToken], controller.removeUser);
+    app.post("/api/group/delete", [authJwt.verifyToken], controller.deletegroup);
     app.get("/api/group/get", [authJwt.verifyToken], controller.getGroup);
     app.get("/api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
 };

@@ -67,3 +67,38 @@ exports.addUser = (req, res) => {
         res.status(500).send({message: err.message});
     });
 };
+exports.removeUser = (req, res) => {
+    Group.findOne({
+        where: {
+            name: req.body.groupname
+        }
+    }).then(group => {
+        User.findOne({
+            where: {
+                username: req.body.username
+            }
+        }).then(user => {
+            user.removeGroup(group);
+        })
+        res.send({message: "User was removed from grouP!"});
+    })
+    .catch(err => {
+        res.status(500).send({message:  err.message});
+    });
+};
+exports.deletegroup = (req, res) => {
+    Group.destroy({
+        where: {
+            groupname: req.body.groupname
+        }
+    }).then(response => {
+        if(response == 1) {
+            res.send({message: "Group was deleted!"});
+        }
+        else {
+            res.status(500).send({message: "Group could not be deleted!"});
+        }
+    }).catch(err => {
+        res.status(500).send({message: err.message});
+    });  
+};
