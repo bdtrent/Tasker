@@ -10,10 +10,46 @@
     <p>
         <strong>Users:</strong>
     </p>
-    <ul>
-        <li *ngFor="let user of groupusers">
+    <ul class="list-group">
+        <li class="list-group-item" *ngFor="let user of groupusers">
             {{ user.username }}
+            <button class="btn btn-danger" data-toggle="modal" data-target="#removeModal" *ngIf="isOwner && user.username != group.owner_name">Remove User</button>
         </li>
     </ul>
-    <button class="btn btn-primary btn-block" *ngIf="isOwner">Add User</button>
+    <button class="btn btn-primary" data-toggle="modal" data-target="#addModal" *ngIf="isOwner">Add User</button>
+</div>
+
+
+<div class="modal fade" id="removeModal" aria-labelledby="removeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-body">
+            Are you sure you want to remove {{user.username}} from {{group.name}}?
+        </div>
+        <div class="modal-footer">
+            <button type="btn btn-primary">Yes</button>
+            <button type="btn btn-danger">No</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="addModal" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-header">
+            <h5 class="modal-title" id="addModalLabel">Add User to {{group.name}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label for="username" class="col-form-label">Username:</label>
+                    <input type="text" class="form-control" id="username">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="btn btn-primary">Submit</button>
+        </div>
+    </div>
 </div>
