@@ -22,7 +22,18 @@ export class GroupService {
   addUser(username: string, groupname: string): Observable<any> {
     return this.http.post(GROUP_API + 'adduser', {
       username,
-      groupname,
+      groupname
+    }, httpOptions);
+  }
+  removeUser(username: string, groupname: string): Observable<any> {
+    return this.http.post(GROUP_API + 'removeuser', {
+      username,
+      groupname
+    }, httpOptions);
+  }
+  disbandGroup(groupname: string): Observable<any> {
+    return this.http.post(GROUP_API + 'delete', {
+      groupname
     }, httpOptions);
   }
   getGroup(name: string): Observable<any> {

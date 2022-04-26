@@ -39,4 +39,19 @@ export class ViewGroupComponent implements OnInit {
     )
   }
 
+  addUser(username: string){
+    this.groupService.addUser(username, this.group.groupname);
+  }
+
+  removeUser(username: string){
+    this.groupService.removeUser(username, this.group.groupname);
+  }
+
+  disbandGroup(){
+    this.groupService.disbandGroup(this.group.groupname);
+  }
+
+  leaveGroup(){
+    this.groupService.removeUser(this.groupService.getUser().username, this.group.groupname);
+  }
 }
