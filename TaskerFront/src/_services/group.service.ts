@@ -19,6 +19,12 @@ export class GroupService {
       owner_name
     }, httpOptions);
   }
+  addUser(username: string, groupname: string): Observable<any> {
+    return this.http.post(GROUP_API + 'adduser', {
+      username,
+      groupname,
+    }, httpOptions);
+  }
   getGroup(name: string): Observable<any> {
     const options = {params: new HttpParams().set('name', name)};
     return this.http.get(GROUP_API + 'get', options);

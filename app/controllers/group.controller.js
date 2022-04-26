@@ -48,3 +48,22 @@ exports.getGroupUsers = (req, res) => {
         res.status(500).send({message: err.message});
     });
 };
+exports.addUser = (req, res) => {
+    Group.findOne({
+        where: {
+            name: req.query.name
+        }
+    }).then(group => {
+        User.findOne({
+            where: {
+                username: req.body.username
+            }
+        }).then(user => {
+            user.addGroup(group);
+        })
+        res.send({message: "User was added to group!"});
+    })
+    .catch(err => {
+        res.status(500).send({message: err.message});
+    });
+};

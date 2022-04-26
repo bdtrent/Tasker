@@ -9,6 +9,7 @@ module.exports = function(app) {
         next();
     });
     app.post("/api/group/create", [authJwt.verifyToken], controller.creategroup);
+    app.post("/api/group/adduser", [authJwt.verifyToken], controller.addUser);
     app.get("/api/group/get", [authJwt.verifyToken], controller.getGroup);
     app.get("/api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
 };
