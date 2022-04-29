@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { GroupService } from 'src/_services/group.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { GroupService } from 'src/_services/group.service';
 export class ViewGroupComponent implements OnInit {
 
   groupname: string;
-  constructor(private groupService: GroupService, private actRoute: ActivatedRoute) {
+  constructor(private groupService: GroupService, private actRoute: ActivatedRoute, private router: Router) {
     this.groupname = this.actRoute.snapshot.params['groupname'];
    }
   group: any;
@@ -39,19 +39,53 @@ export class ViewGroupComponent implements OnInit {
     )
   }
 
-  addUser(username: string){
-    this.groupService.addUser(username, this.group.groupname);
+  addUser(username: string): void {
+    this.groupService.addUser(username, this.groupname).subscribe({
+      next: data => {
+        console.log(data);
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
-  removeUser(username: string){
-    this.groupService.removeUser(username, this.group.groupname);
+  removeUser(username: string): void {
+    this.groupService.removeUser(username, this.groupname).subscribe({
+      next: data => {
+        console.log(data);
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
-  disbandGroup(){
-    this.groupService.disbandGroup(this.group.groupname);
+  disbandGroup(): void {
+    this.groupService.disbandGroup(this.groupname).subscribe({
+      next: data => {
+        console.log(data);
+        document.getElementById("dismissDisbandModal")?.click();
+        this.router.navigate(['/groups']);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 
-  leaveGroup(){
-    this.groupService.removeUser(this.groupService.getUser().username, this.group.groupname);
+  leaveGroup(): void {
+    this.groupService.removeUser(this.groupService.getUser().username, this.groupname).subscribe({
+      next: data => {
+        console.log(data);
+        document.getElementById("dismissLeaveModal")?.click();
+        this.router.navigate(['/groups']);
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
   }
 }

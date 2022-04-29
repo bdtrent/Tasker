@@ -49,9 +49,10 @@ exports.getGroupUsers = (req, res) => {
     });
 };
 exports.addUser = (req, res) => {
+    console.log(req);
     Group.findOne({
         where: {
-            name: req.query.name
+            name: req.body.groupname
         }
     }).then(group => {
         User.findOne({
@@ -59,6 +60,8 @@ exports.addUser = (req, res) => {
                 username: req.body.username
             }
         }).then(user => {
+            console.log(group);
+            console.log(user);
             user.addGroup(group);
         })
         res.send({message: "User was added to group!"});
@@ -89,7 +92,7 @@ exports.removeUser = (req, res) => {
 exports.deletegroup = (req, res) => {
     Group.destroy({
         where: {
-            groupname: req.body.groupname
+            name: req.body.groupname
         }
     }).then(response => {
         if(response == 1) {

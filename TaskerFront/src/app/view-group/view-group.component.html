@@ -13,25 +13,12 @@
     <ul class="list-group">
         <li class="list-group-item" *ngFor="let user of groupusers">
             {{ user.username }}
-            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#removeModal" *ngIf="isOwner && user.username != group.owner_name">Remove User</button>
+            <button type="button" class="btn btn-danger" (click)="removeUser(user.username)" *ngIf="isOwner && user.username != group.owner_name">Remove User</button>
         </li>
     </ul>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" data-username="user.username" *ngIf="isOwner">Add User</button>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" *ngIf="!isOwner">Leave Group</button>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#disbandModal" *ngIf="isOwner">Disband Group</button>
-</div>
-
-
-<div class="modal fade" id="removeModal" aria-labelledby="removeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-body">
-        </div>
-        <div class="modal-footer">
-            <input type="hidden" id="removeusername" #removeusername>
-            <button type="button" class="btn btn-danger" (click)="removeUser(removeusername.value)">Yes</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
-        </div>
-    </div>
 </div>
 
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
@@ -60,12 +47,14 @@
 
 <div class="modal fade" id="leaveModal" aria-labelledby="leaveModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-body">
-            Are you sure you want to leave {{group.name}}?
-        </div>
-        <div class="modal-footer">
-            <button type="button" class="btn btn-danger" (click)="leaveGroup()">Yes</button>
-            <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to leave {{group.name}}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="leaveGroup()">Yes</button>
+                <button type="button" id="dismissLeaveModal" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
         </div>
     </div>
 </div>
@@ -77,19 +66,9 @@
                 Are you sure you want to disband {{group.name}}?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger">Yes</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal">No</button>
+                <button type="button" class="btn btn-danger" (click)="disbandGroup()">Yes</button>
+                <button type="button" id="dismissDisbandModal" class="btn btn-primary" data-dismiss="modal">No</button>
             </div>
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    $('#removeModal').on('show.bs.modal', function(event){
-        var button = $(event.relatedTarget)
-        var username = button.data('username')
-        var modal = $(this)
-        modal.find('.modal-body').text('Are you sure you want to remove '+username+' from '+group.name+'?')
-        modal.find('.modal-footer input').val(username);
-    })
-</script>
