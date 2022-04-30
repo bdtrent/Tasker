@@ -12,6 +12,10 @@ module.exports = function(app) {
     app.post("/api/group/adduser", [authJwt.verifyToken], controller.addUser);
     app.post("/api/group/removeuser", [authJwt.verifyToken], controller.removeUser);
     app.post("/api/group/delete", [authJwt.verifyToken], controller.deletegroup);
+    app.post("/api/group/addrole", [authJwt.verifyToken], controller.addRole);
+    app.post("/api/group/updaterole", [authJwt.verifyToken], controller.updateRole);
+    app.post("/api/group/deleterole", [authJwt.verifyToken], controller.deleteRole);
     app.get("/api/group/get", [authJwt.verifyToken], controller.getGroup);
     app.get("/api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
+    app.get("/api/group/getroles", [authJwt.verifyToken], controller.getGroupRoles);
 };

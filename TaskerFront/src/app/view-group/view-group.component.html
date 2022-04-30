@@ -13,11 +13,13 @@
     <ul class="list-group">
         <li class="list-group-item" *ngFor="let user of groupusers">
             {{ user.username }}
+            <button type="button" class="btn btn-secondary" [routerLink]="['/', user.username]" *ngIf="isOwner && user.username != group.owner_name">Change Role</button>
             <button type="button" class="btn btn-danger" (click)="removeUser(user.username)" *ngIf="isOwner && user.username != group.owner_name">Remove User</button>
         </li>
     </ul>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" data-username="user.username" *ngIf="isOwner">Add User</button>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" *ngIf="!isOwner">Leave Group</button>
+    <button type="button" class="btn btn-primary" [routerLink]="['./roles']" *ngIf="isOwner">Edit Roles</button>
     <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#disbandModal" *ngIf="isOwner">Disband Group</button>
 </div>
 

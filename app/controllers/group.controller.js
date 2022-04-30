@@ -1,5 +1,7 @@
+const res = require("express/lib/response");
 const db = require("../models");
 const Group = db.group;
+const Role = db.role;
 const User = db.user;
 exports.creategroup = (req, res) => {
     console.log(req.name)
@@ -47,6 +49,20 @@ exports.getGroupUsers = (req, res) => {
     .catch(err => {
         res.status(500).send({message: err.message});
     });
+};
+exports.getGroupRoles = (req, res) => {
+    Group.findOne({
+        where: {
+            name: req.query.name
+        }
+    }).then(group => {
+        group.getRoles().then(roles => {
+            res.status(200).send(roles);
+        })
+    })
+    .catch(err => {
+        res.status(500).send({message: err.message});
+    })
 };
 exports.addUser = (req, res) => {
     console.log(req);
@@ -100,6 +116,69 @@ exports.deletegroup = (req, res) => {
         }
         else {
             res.status(500).send({message: "Group could not be deleted!"});
+        }
+    }).catch(err => {
+        res.status(500).send({message: err.message});
+    });  
+};
+
+exports.addRole = (req, res) => {
+    Role.create({
+        name: req.body.name,
+        canCreateTasks: req.body.canCreateTasks,
+        canEditTasks: req.body.canEditTasks,
+        canModMembers: req.body.canModMembers
+    })
+    .then(role => {
+        Group.findOne({
+            where: {
+                name: req.body.groupname
+            }
+        })
+        .then(group => {
+            group.addRole(role);
+            res.status(200).send({message: "Role was created successfully!"});
+        })
+        .catch(err => {
+            res.status(500).send({message: err.message});
+        })
+    })
+    .catch(err => {
+        res.status(500).send({message: err.message});
+    })
+};
+
+exports.updateRole = (req, res) => {
+    Role.update({
+        name: req.body.name,
+        canCreateTasks: req.body.canCreateTasks,
+        canEditTasks: req.body.canEditTasks,
+        canModMembers: req.body.canModMembers
+    }, {
+        where: {
+            id: req.body.id
+        }
+    })
+    .then(role => {
+        res.status(200).send({message: "Role updated successfully!"});
+    })
+    .catch(err => {
+        res.status(500).send({message: err.message});
+    });
+};
+
+exports.deleteRole = (req, res) => {
+    Role.destroy({
+        where: {
+            id: req.body.id
+        }
+    })
+    .then(response => {
+        if(response == 1) {
+            res.send({message: "Role was deleted!"});
+        }
+        else {
+            res.status(500).send({message: "Role could not be deleted!"});
         }
     }).catch(err => {
         res.status(500).send({message: err.message});

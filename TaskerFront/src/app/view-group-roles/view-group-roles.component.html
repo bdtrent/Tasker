@@ -1,0 +1,105 @@
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let role of roles">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{role.name}}
+            </mat-panel-title>
+        </mat-expansion-panel-header>
+        <form name="form" (ngSubmit)="onSubmit()" #f="ngForm" novalidate>
+            <div class="form-group">
+                <label for="roleName">
+                    Name:
+                </label>
+                <input type="text" class="form-control" id="roleName" name="roleName" placeholder="{{role.name}}" [(ngModel)]="form.name" #roleName="ngModel">
+            </div>
+            <div class="form-check" *ngIf="role.canCreateTasks">
+                <input class="form-check-input" type="checkbox" value="true" id="createTasksChecked" name="createTasksChecked" [(ngModel)]="form.canCreateTasks" #createTasksChecked="ngModel">
+                <label class="form-check-label" for="createTasksChecked">
+                    Can create tasks
+                </label>
+            </div>
+            <div class="form-check" *ngIf="!role.canCreateTasks">
+                <input class="form-check-input" type="checkbox" value="true" id="createTasksCheck" name="createTasksCheck" [(ngModel)]="form.canCreateTasks" #createTasksCheck="ngModel">
+                <label class="form-check-label" for="createTasksCheck">
+                    Can create tasks
+                </label>
+            </div>
+            <div class="form-check" *ngIf="role.canEditTasks">
+                <input class="form-check-input" type="checkbox" value="true" id="editTasksCheck" name="editTasksCheck" [(ngModel)]="form.canEditTasks" #editTasksChecked="ngModel"checked>
+                <label class="form-check-label" for="editTasksChecked">
+                    Can edit tasks
+                </label>
+            </div>
+            <div class="form-check" *ngIf="!role.canEditTasks">
+                <input class="form-check-input" type="checkbox" value="true" id="editTasksCheck" name="editTasksCheck" [(ngModel)]="form.canEditTasks" #editTasksCheck="ngModel">
+                <label class="form-check-label" for="editTasksCheck">
+                    Can edit tasks
+                </label>
+            </div>
+            <div class="form-check" *ngIf="role.canModMembers">
+                <input class="form-check-input" type="checkbox" value="true" id="modMembersChecked" name="modMembersChecked" [(ngModel)]="form.canModMembers" #modMembersChecked="ngModel" checked>
+                <label class="form-check-label" for="modMembersChecked">
+                    Can add/remove members
+                </label>
+            </div>
+            <div class="form-check" *ngIf="!role.canModMembers">
+                <input class="form-check-input" type="checkbox" value="true" id="modMembersCheck" name="modMembersCheck" [(ngModel)]="form.canModMembers" #modMembersCheck="ngModel">
+                <label class="form-check-label" for="modMembersCheck">
+                    Can add/remove members
+                </label>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-primary">Apply Changes</button>
+            </div>
+        </form>
+    </mat-expansion-panel>
+</mat-accordion>
+<a class="list-group-item list-group-item-action list-group-item-secondary" data-toggle="modal" data-target="#addModal">
+    Add new role...
+</a>
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">
+                    Create new role
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="roleName">
+                            Name:
+                        </label>
+                        <input type="text" class="form-control" id="roleName" #roleName>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="true" id="createTasksCheck" #createTasksCheck>
+                        <label class="form-check-label" for="createTasksCheck">
+                            Can create tasks
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="true" id="editTasksCheck" #editTasksCheck>
+                        <label class="form-check-label" for="editTasksCheck">
+                            Can edit tasks
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="true" id="modMembersCheck" #modMembersCheck>
+                        <label class="form-check-label" for="modMembersCheck">
+                            Can add/remove members
+                        </label>
+                    </div>
+                    <button type="button" class="btn btn-primary" (click)="addRole(roleName.value, createTasksCheck.value, editTasksCheck.value, modMembersCheck.value)">
+                        Create Role
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

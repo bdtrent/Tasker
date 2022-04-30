@@ -44,6 +44,35 @@ export class GroupService {
     const options = {params: new HttpParams().set('name', name)};
     return this.http.get(GROUP_API + 'getusers', options);
   }
+  getGroupRoles(name: string): Observable<any> {
+    const options = {params: new HttpParams().set('name', name)};
+    return this.http.get(GROUP_API + 'getroles', options);
+  }
+
+  addRole(groupname: string, name: string, canCreateTasks: boolean, canEditTasks: boolean, canModMembers: boolean): Observable<any> {
+    return this.http.post(GROUP_API + 'addrole', {
+      groupname,
+      name,
+      canCreateTasks,
+      canEditTasks,
+      canModMembers
+    }, httpOptions);
+  }
+  updateRole(id:number, name: string, canCreateTasks: boolean, canEditTasks: boolean, canModMembers: boolean): Observable<any> {
+    return this.http.post(GROUP_API + 'updaterole', {
+      id,
+      name,
+      canCreateTasks,
+      canEditTasks,
+      canModMembers
+    }, httpOptions);
+  }
+  deleteRole(id:number): Observable<any> {
+    return this.http.post(GROUP_API + 'deleterole', {
+      id
+    }, httpOptions);
+  }
+
   public getUser(): any {
     const user = window.sessionStorage.getItem(USER_KEY);
     if (user) {
