@@ -15,14 +15,6 @@ export class ViewGroupRolesComponent implements OnInit {
    }
   group: any;
   roles: any[] = [];
-  roleSelected=false;
-  currentRole: any;
-  form: any = {
-    name: null,
-    canCreateTasks: null,
-    canEditTasks: null,
-    canModMembers: null
-  };
 
   ngOnInit(): void {
     this.groupService.getGroup(this.groupname).subscribe(
@@ -43,26 +35,7 @@ export class ViewGroupRolesComponent implements OnInit {
     )
   }
 
-  setCurrentRole(role: any): void {
-    this.currentRole = role;
-    if(!this.roleSelected) {
-      this.roleSelected = true;
-    }
-  }
-
-  addRole(name: string, canCreateValue: string, canEditValue: string, canModValue: string): void {
-    var canCreateTasks = false;
-    var canEditTasks = false;
-    var canModMembers = false;
-    if(canCreateValue=="true") {
-      canCreateTasks = true;
-    }
-    if(canEditValue=="true") {
-      canEditTasks = true;
-    }
-    if(canModValue=="true") {
-      canModMembers = true;
-    }
+  addRole(name: string, canCreateTasks: boolean, canEditTasks: boolean, canModMembers: boolean): void {
     this.groupService.addRole(this.groupname, name, canCreateTasks, canEditTasks, canModMembers).subscribe({
       next: data => {
         console.log(data);
@@ -74,23 +47,19 @@ export class ViewGroupRolesComponent implements OnInit {
     });
   }
 
-  onSubmit(): void {
-    const {name, canCreateValue, canEditValue, canModValue} = this.form;
-    var canCreateTasks= false;
-    var canEditTasks = false;
-    var canModMembers = false;
+  updateRole(oldname: string, name: string, canCreateTasks: boolean, canEditTasks: boolean, canModMembers: boolean): void {
+    var roleId = 0;
+    
+    if(name=="") {
+      name = oldname;
+    }
+    this.roles.forEach(function (value) {
+      if(value.name == oldname) {
+        roleId = value.id;
+      }
+    });
 
-    if(canCreateValue=="true") {
-      canCreateTasks = true;
-    }
-    if(canEditValue=="true") {
-      canEditTasks = true;
-    }
-    if(canModValue=="true") {
-      canModMembers = true;
-    }
-
-    this.groupService.updateRole(this.currentRole.id, name, canCreateTasks, canEditTasks, canModMembers).subscribe({
+    this.groupService.updateRole(roleId, name, canCreateTasks, canEditTasks, canModMembers).subscribe({
       next: data => {
         console.log(data);
         window.location.reload();
@@ -99,6 +68,25 @@ export class ViewGroupRolesComponent implements OnInit {
         console.log(err);
       }
     });
+  }
+
+  deleteRole(name: string): void {
+    var roleId = 0;
+    this.roles.forEach(function (value) {
+      if(value.name == name) {
+        roleId = value.id;
+      }
+    });
+
+    this.groupService.deleteRole(roleId).subscribe({
+      next: data => {
+        console.log(data);
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    })
   }
 
 }
