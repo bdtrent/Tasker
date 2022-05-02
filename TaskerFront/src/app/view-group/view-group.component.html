@@ -10,18 +10,43 @@
     <p>
         <strong>Users:</strong>
     </p>
-    <ul class="list-group">
-        <li class="list-group-item" *ngFor="let user of groupusers">
-            {{ user.username }}
-            <button type="button" class="btn btn-secondary" [routerLink]="['/', user.username]" *ngIf="isOwner && user.username != group.owner_name">Change Role</button>
-            <button type="button" class="btn btn-danger" (click)="removeUser(user.username)" *ngIf="isOwner && user.username != group.owner_name">Remove User</button>
-        </li>
-    </ul>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" data-username="user.username" *ngIf="isOwner">Add User</button>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" *ngIf="!isOwner">Leave Group</button>
-    <button type="button" class="btn btn-primary" [routerLink]="['./roles']" *ngIf="isOwner">Edit Roles</button>
-    <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#disbandModal" *ngIf="isOwner">Disband Group</button>
 </div>
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let user of groupusers" style="overflow: visible;">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{user.user.username}}
+            </mat-panel-title>
+            <mat-panel-description *ngIf="user.user.username==group.owner_name">
+                Owner
+            </mat-panel-description>
+            <mat-panel-description *ngIf="user.role == null && user.user.username != group.owner_name">
+                None
+            </mat-panel-description>
+            <mat-panel-description *ngIf="user.role != null">
+                {{user.role.name}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="dropdown">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                Change Role
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" *ngFor="let role of grouproles" (click)="changeRole(user.user.username, role.name)">
+                    {{role.name}}
+                </a>
+            </div>
+        </div>
+        <button type="button" class="btn btn-danger float-right" (click)="removeUser(user.user.username)" *ngIf="isOwner && user.user.username != group.owner_name">Remove User</button>
+    </mat-expansion-panel>
+</mat-accordion>
+<a class="list-group-item list-group-item-action list-group-item-secondary" data-toggle="modal" data-target="#addModal" *ngIf="isOwner">
+    Add new user...
+</a>
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" *ngIf="!isOwner">Leave Group</button>
+<button type="button" class="btn btn-primary" [routerLink]="['./roles']" *ngIf="isOwner">Edit Roles</button>
+<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#disbandModal" *ngIf="isOwner">Disband Group</button>
+
 
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">

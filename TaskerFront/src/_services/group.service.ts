@@ -48,6 +48,20 @@ export class GroupService {
     const options = {params: new HttpParams().set('name', name)};
     return this.http.get(GROUP_API + 'getroles', options);
   }
+  
+  getUserRole(groupId: number, username: string): Observable<any> {
+    let params = new HttpParams().set('group', groupId);
+    params = params.append('username', username);
+    const options = {params: params};
+    return this.http.get(GROUP_API + 'getuserrole', options);
+  }
+
+  changeUserRole(username: string, roleId: number): Observable<any> {
+    return this.http.post(GROUP_API + 'changeuserrole', {
+      username,
+      roleId
+    }, httpOptions);
+  }
 
   addRole(groupname: string, name: string, canCreateTasks: boolean, canEditTasks: boolean, canModMembers: boolean): Observable<any> {
     return this.http.post(GROUP_API + 'addrole', {

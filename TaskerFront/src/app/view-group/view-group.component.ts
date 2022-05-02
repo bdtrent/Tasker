@@ -14,14 +14,21 @@ export class ViewGroupComponent implements OnInit {
     this.groupname = this.actRoute.snapshot.params['groupname'];
    }
   group: any;
-  groupusers: any[] = [];
+  grouproles: any[] = [];
+  groupusers: {
+    user: any,
+    role: any
+  }[] = [];
+  currentUser: any;
+  userRole: any;
   isOwner = false;
 
   ngOnInit(): void {
+    this.currentUser = this.groupService.getUser();
     this.groupService.getGroup(this.groupname).subscribe(
       data => {
         this.group = data;
-        if(this.groupService.getUser().username == this.group.owner_name) {
+        if(this.currentUser.username == this.group.owner_name) {
           this.isOwner = true;
         }
       },
@@ -29,9 +36,34 @@ export class ViewGroupComponent implements OnInit {
         this.group = JSON.parse(err.error).message;
       }
     )
+    this.groupService.getGroupRoles(this.groupname).subscribe(
+      data => {
+        this.grouproles = data;
+        console.log(this.grouproles);
+      },
+      err => {
+        this.grouproles = JSON.parse(err.error).message;
+      }
+    )
     this.groupService.getGroupUsers(this.groupname).subscribe(
       data => {
-        this.groupusers = data;
+        data.forEach((element: any) => {
+          this.groupService.getUserRole(this.group.id, element.username).subscribe({
+            next: returnedRole => {
+              let thisUser = {
+                user: element,
+                role: returnedRole[0]
+              };
+              if (thisUser.user.username == this.currentUser.username) {
+                this.userRole = thisUser.role;
+              }
+              this.groupusers.push(thisUser);
+            },
+            error: err => {
+            }
+          });
+        });
+        console.log(this.groupusers);
       },
       err => {
         this.groupusers = JSON.parse(err.error).message;
@@ -88,4 +120,21 @@ export class ViewGroupComponent implements OnInit {
       }
     });
   }
+
+  changeRole(username: string, rolename: string): void {
+    const newRole = this.grouproles.find((role) => {
+      return role.name == rolename;
+    });
+    this.groupService.changeUserRole(username, newRole.id).subscribe({
+      next: data => {
+        console.log(data);
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
 }
+
+
