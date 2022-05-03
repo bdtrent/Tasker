@@ -1,7 +1,21 @@
 <div class="calendar-container">
-	<a class="calendar-day calendar-header" *ngFor="let day of weekdays">{{day[0]}}</a>
-	<a class="calendar-day" *ngFor="let _ of [].constructor(31); index as i" (click)="selectDay(i+1)">{{i+1}}</a>
+	<div class="calendar-title">
+		<a (click)="navigateMonth(-1)"><</a>
+		<h2>{{ currentMonth.toLocaleString('default', { month: 'long' }) }}</h2>
+		<a (click)="navigateMonth(1)">></a>
+	</div>
+	<div class="calendar-header">
+		<a class="calendar-day calendar-header" *ngFor="let day of weekdays">{{day[0]}}</a>
+	</div>
+	<div class="calendar-days">
+		<a class="calendar-day" [ngClass]="{'not-current-month': day.getMonth() != currentMonth.getMonth()}" *ngFor="let day of daysList" (click)="selectDay(day)">
+			{{ day.getDate() }}
+		</a>
+	</div>
 </div>
 <div class="selected-day" *ngIf="selectedDay">
-	<div class="selected-day-header">{{selectedDay}}</div>
+	<div class="selected-day-header">{{selectedDay.toLocaleString('default', { month: 'long', day: 'numeric' })}}</div>
+	<ul *ngIf="selectedDayTasks != null">
+		<li *ngFor="let task of selectedDayTasks">{{task}}</li>
+	</ul>
 </div>

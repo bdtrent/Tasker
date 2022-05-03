@@ -8,12 +8,15 @@ a:hover {
 	background-color: #444;
 	padding: 8px 16px;
 	border-radius: 8px;
+	margin: 64px auto;
+	margin-bottom: 16px;
+}
+
+.calendar-days {
 	display: grid;
 	grid-template-columns: repeat(7, 56px);
 	justify-content: center;
 	align-items: center;
-	margin: 64px auto;
-	margin-bottom: 16px;
 }
 
 .calendar-day {
@@ -30,11 +33,28 @@ a:hover {
 	transition: 0.1s background-color;
 }
 
+.calendar-title {
+	display: flex;
+	align-items: center;
+}
+
+.calendar-title h2 {
+	text-align: center;
+	flex-grow: 2;
+}
+
+.calendar-title a {
+	font-size: 24px;
+	padding: 12px;
+	cursor: pointer;
+}
+
 .calendar-header {
 	font-weight: bold;
 	font-size: 1.2em;
-	margin-bottom: 18px;
+	margin-bottom: 8px;
 	cursor: default;
+	display: flex;
 }
 
 .calendar-day:hover {
@@ -61,5 +81,9 @@ a:hover {
 	padding-bottom: 16px;
 	font-size: 2rem;
 	font-weight: bold;
-	border-bottom: 2px solid #888;
+	border-bottom: 2px solid #666;
+}
+
+.not-current-month {
+	color: #aaa;
 }

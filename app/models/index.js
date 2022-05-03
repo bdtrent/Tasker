@@ -23,6 +23,7 @@ db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
 db.group = require("../models/group.model.js")(sequelize, Sequelize);
+db.task = require("../models/task.model.js")(sequelize, Sequelize);
 db.group.belongsToMany(db.user, {
     through: "user_groups", 
     foreignKey: "groupId",
