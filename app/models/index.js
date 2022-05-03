@@ -21,15 +21,23 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.user = require("../models/user.model.js")(sequelize, Sequelize);
 db.role = require("../models/role.model.js")(sequelize, Sequelize);
-db.role.belongsToMany(db.user, {
-    through: "user_roles",
-    foreignKey: "roleId",
+db.group = require("../models/group.model.js")(sequelize, Sequelize);
+db.group.belongsToMany(db.user, {
+    through: "user_groups", 
+    foreignKey: "groupId",
     otherKey: "userId"
 });
-db.user.belongsToMany(db.role, {
-    through: "user_roles",
+db.user.belongsToMany(db.group, {
+    through: "user_groups",
     foreignKey: "userId",
-    otherKey: "roleId"
+    otherKey: "groupId"
 });
-db.ROLES = ["user", "admin", "moderator"];
+db.group.hasMany(db.role);
+db.role.belongsTo(db.group);
+db.user.belongsToMany(db.role, {
+    through: "user_roles"
+});
+db.role.belongsToMany(db.user, {
+    through: "user_roles"
+});
 module.exports = db;

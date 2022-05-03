@@ -9,7 +9,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const db = require("./app/models");
-const Role = db.role;
 db.sequelize.sync();
 
 app.get("/", (req,res) => {
@@ -18,6 +17,7 @@ app.get("/", (req,res) => {
 
 require('./app/routes/auth.routes')(app);
 require('./app/routes/user.routes')(app);
+require('./app/routes/group.routes')(app);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {

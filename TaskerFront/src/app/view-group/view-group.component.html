@@ -1,0 +1,101 @@
+<div class ="container">
+    <header class="jumbotron">
+        <h3>
+            <strong>{{ group.name }}</strong>
+        </h3>
+    </header>
+    <p>
+        <strong>Owner:</strong> {{group.owner_name}}
+    </p>
+    <p>
+        <strong>Users:</strong>
+    </p>
+</div>
+<mat-accordion>
+    <mat-expansion-panel *ngFor="let user of groupusers" style="overflow: visible;">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                {{user.user.username}}
+            </mat-panel-title>
+            <mat-panel-description *ngIf="user.user.username==group.owner_name">
+                Owner
+            </mat-panel-description>
+            <mat-panel-description *ngIf="user.role == null && user.user.username != group.owner_name">
+                None
+            </mat-panel-description>
+            <mat-panel-description *ngIf="user.role != null">
+                {{user.role.name}}
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="dropdown" *ngIf="isOwner && user.user.username != group.owner_name">
+            <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
+                Change Role
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" *ngFor="let role of grouproles" (click)="changeRole(user.user.username, role.name)">
+                    {{role.name}}
+                </a>
+            </div>
+        </div>
+        <button type="button" class="btn btn-danger float-right" (click)="removeUser(user.user.username)" *ngIf="userRole.canModMembers && user.user.username != group.owner_name && user.user.username != currentUser.username">Remove User</button>
+    </mat-expansion-panel>
+</mat-accordion>
+<a class="list-group-item list-group-item-action list-group-item-secondary" data-toggle="modal" data-target="#addModal" *ngIf="userRole.canModMembers">
+    Add new user...
+</a>
+<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" *ngIf="!isOwner">Leave Group</button>
+<button type="button" class="btn btn-primary" [routerLink]="['./roles']" *ngIf="isOwner">Edit Roles</button>
+<button type="button" class="btn btn-danger float-right" data-toggle="modal" data-target="#disbandModal" *ngIf="isOwner">Disband Group</button>
+
+
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addModalLabel">Add User to {{group.name}}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="form-group">
+                        <label for="username" class="col-form-label">Username:</label>
+                        <input type="text" class="form-control" id="addusername" #addusername>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" (click)="addUser(addusername.value)">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="leaveModal" aria-labelledby="leaveModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to leave {{group.name}}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="leaveGroup()">Yes</button>
+                <button type="button" id="dismissLeaveModal" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="disbandModal" aria-labelledby="disbandModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                Are you sure you want to disband {{group.name}}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" (click)="disbandGroup()">Yes</button>
+                <button type="button" id="dismissDisbandModal" class="btn btn-primary" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
+</div>

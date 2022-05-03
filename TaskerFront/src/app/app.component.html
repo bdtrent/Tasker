@@ -5,14 +5,17 @@
       Tasker
     </a>
     <ul class="navbar-nav mr-auto" routerLinkActive="active">
-      <li class="nav-item" *ngIf="showAdminBoard">
-        <a href="/admin" class="nav-link" routerLink="admin" style="color: #44867b;">Admin Board</a>
-      </li>
-      <li class="nav-item" *ngIf="showModeratorBoard">
-        <a href="/mod" class="nav-link" routerLink="mod" style="color: #44867b;">Moderator Board</a>
-      </li>
-      <li class="nav-item">
+      <li class="nav-item" *ngIf="isLoggedIn">
         <a href="/user" class="nav-link" *ngIf="isLoggedIn" routerLink="user" style="color: #44867b;">User</a>
+      </li>
+      <li class="nav-item dropdown" *ngIf="isLoggedIn">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false">
+          Groups
+        </a>
+        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+          <li><a class="dropdown-item" href="/groups">My Groups</a></li>
+          <li><a class="dropdown-item" href="/creategroup">Create New Group</a></li>
+        </ul>
       </li>
     </ul>
     <ul class="navbar-nav ml-auto" *ngIf="!isLoggedIn">
@@ -36,3 +39,5 @@
     <router-outlet></router-outlet>
   </div>
 </div>
+
+

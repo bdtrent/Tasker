@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { BoardModeratorComponent } from './board-moderator.component';
+import { ViewGroupRolesComponent } from './view-group-roles.component';
 
-describe('BoardModeratorComponent', () => {
-  let component: BoardModeratorComponent;
-  let fixture: ComponentFixture<BoardModeratorComponent>;
+describe('ViewGroupRolesComponent', () => {
+  let component: ViewGroupRolesComponent;
+  let fixture: ComponentFixture<ViewGroupRolesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ BoardModeratorComponent ]
+      declarations: [ ViewGroupRolesComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(BoardModeratorComponent);
+    fixture = TestBed.createComponent(ViewGroupRolesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
