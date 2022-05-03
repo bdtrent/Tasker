@@ -139,7 +139,12 @@ export class ViewGroupComponent implements OnInit {
     this.groupService.changeUserRole(username, newRole.id).subscribe({
       next: data => {
         console.log(data);
-        window.location.reload();
+        this.groupusers.forEach(element => {
+          if(element.user.username == username) {
+            element.role = newRole;
+          }
+        });
+        //window.location.reload();
       },
       error: err => {
         console.log(err);

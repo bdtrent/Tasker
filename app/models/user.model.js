@@ -9,6 +9,12 @@ module.exports = (sequelize, Sequelize) => {
         password: {
             type: Sequelize.STRING
         }
+    }, {
+        indexes:[
+            {
+                fields: ['username']
+            }
+        ]
     });
     return User;
 };
