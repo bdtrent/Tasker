@@ -9,3 +9,7 @@
 .nav-link {
     color: #44867b;
 }
+
+:host > * {
+    height: 100%;
+}

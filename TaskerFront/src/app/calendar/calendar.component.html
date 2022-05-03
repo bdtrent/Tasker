@@ -1,0 +1,7 @@
+<div class="calendar-container">
+	<a class="calendar-day calendar-header" *ngFor="let day of weekdays">{{day[0]}}</a>
+	<a class="calendar-day" *ngFor="let _ of [].constructor(31); index as i" (click)="selectDay(i+1)">{{i+1}}</a>
+</div>
+<div class="selected-day" *ngIf="selectedDay">
+	<div class="selected-day-header">{{selectedDay}}</div>
+</div>
