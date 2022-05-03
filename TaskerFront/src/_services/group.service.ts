@@ -40,18 +40,18 @@ export class GroupService {
     const options = {params: new HttpParams().set('name', name)};
     return this.http.get(GROUP_API + 'get', options);
   }
-  getGroupUsers(name: string): Observable<any> {
-    const options = {params: new HttpParams().set('name', name)};
+  getGroupUsers(groupId: number): Observable<any> {
+    const options = {params: new HttpParams().set('group', groupId)};
     return this.http.get(GROUP_API + 'getusers', options);
   }
-  getGroupRoles(name: string): Observable<any> {
-    const options = {params: new HttpParams().set('name', name)};
+  getGroupRoles(groupId: number): Observable<any> {
+    const options = {params: new HttpParams().set('group', groupId)};
     return this.http.get(GROUP_API + 'getroles', options);
   }
   
-  getUserRole(groupId: number, username: string): Observable<any> {
+  getUserRole(groupId: number, userId: number): Observable<any> {
     let params = new HttpParams().set('group', groupId);
-    params = params.append('username', username);
+    params = params.append('user', userId);
     const options = {params: params};
     return this.http.get(GROUP_API + 'getuserrole', options);
   }

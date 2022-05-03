@@ -20,25 +20,25 @@ export class ViewGroupRolesComponent implements OnInit {
     this.groupService.getGroup(this.groupname).subscribe(
       data => {
         this.group = data;
+        this.groupService.getGroupRoles(this.group.id).subscribe(
+          data => {
+            this.roles = data;
+          },
+          err => {
+            this.roles = JSON.parse(err.error).message;
+          }
+        )
       },
       err => {
         this.group = JSON.parse(err.error).message;
       }
     )
-    this.groupService.getGroupRoles(this.groupname).subscribe(
-      data => {
-        this.roles = data;
-      },
-      err => {
-        this.roles = JSON.parse(err.error).message;
-      }
-    )
+    
   }
 
   addRole(name: string, canCreateTasks: boolean, canEditTasks: boolean, canModMembers: boolean): void {
     this.groupService.addRole(this.groupname, name, canCreateTasks, canEditTasks, canModMembers).subscribe({
       next: data => {
-        console.log(data);
         window.location.reload();
       },
       error: err => {
@@ -61,7 +61,6 @@ export class ViewGroupRolesComponent implements OnInit {
 
     this.groupService.updateRole(roleId, name, canCreateTasks, canEditTasks, canModMembers).subscribe({
       next: data => {
-        console.log(data);
         window.location.reload();
       },
       error: err => {
@@ -80,7 +79,6 @@ export class ViewGroupRolesComponent implements OnInit {
 
     this.groupService.deleteRole(roleId).subscribe({
       next: data => {
-        console.log(data);
         window.location.reload();
       },
       error: err => {

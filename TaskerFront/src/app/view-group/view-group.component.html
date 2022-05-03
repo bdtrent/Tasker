@@ -27,7 +27,7 @@
                 {{user.role.name}}
             </mat-panel-description>
         </mat-expansion-panel-header>
-        <div class="dropdown">
+        <div class="dropdown" *ngIf="isOwner && user.user.username != group.owner_name">
             <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-expanded="false">
                 Change Role
             </button>
@@ -37,10 +37,10 @@
                 </a>
             </div>
         </div>
-        <button type="button" class="btn btn-danger float-right" (click)="removeUser(user.user.username)" *ngIf="isOwner && user.user.username != group.owner_name">Remove User</button>
+        <button type="button" class="btn btn-danger float-right" (click)="removeUser(user.user.username)" *ngIf="userRole.canModMembers && user.user.username != group.owner_name && user.user.username != currentUser.username">Remove User</button>
     </mat-expansion-panel>
 </mat-accordion>
-<a class="list-group-item list-group-item-action list-group-item-secondary" data-toggle="modal" data-target="#addModal" *ngIf="isOwner">
+<a class="list-group-item list-group-item-action list-group-item-secondary" data-toggle="modal" data-target="#addModal" *ngIf="userRole.canModMembers">
     Add new user...
 </a>
 <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#leaveModal" *ngIf="!isOwner">Leave Group</button>
