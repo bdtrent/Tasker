@@ -1,186 +1,218 @@
 const res = require("express/lib/response");
+const { sequelize } = require("../models");
 const db = require("../models");
 const Group = db.group;
 const Role = db.role;
 const User = db.user;
-exports.creategroup = (req, res) => {
-    console.log(req.name)
-    Group.create({
-        name: req.body.name,
-        owner_name: req.body.owner_name
-    })
-    .then(group => {
-        User.findOne({
+const {QueryTypes, Transaction} = require('sequelize');
+exports.creategroup = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const group = await Group.create({
+            name: req.body.name,
+            owner_name: req.body.owner_name
+        }, {transaction: t});
+
+        const user = await User.findOne({
             where: {
                 username: req.body.owner_name
             }
-        })
-            .then(user => {
-                user.addGroup(group);
-            })
-        res.send({ message: "Group was created successfully!"});
-    })
-    .catch(err => {
-        res.status(500).send({ message: err.message });
-    });
-};
-exports.getGroup = (req, res) => {
-    Group.findOne({
-        where: {
-            name: req.query.name
-        }
-    }).then(group => {
-        res.status(200).send(group);
-    })
-    .catch(err => {
+        }, {transaction: t});
+
+        await user.addGroup(group, {transaction: t});
+
+        await t.commit();
+
+    } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
-    });
+    }
 };
-exports.getGroupUsers = (req, res) => {
-    Group.findOne({
-        where: {
-            name: req.query.name
-        }
-    }).then(group => {
-        group.getUsers().then(users => {
-            res.status(200).send(users);
+exports.getGroup = async(req, res) => {
+    try {
+        const group = await Group.findOne({
+            where: {
+                name: req.query.name
+            }
         });
-    })
-    .catch(err => {
+        res.status(200).send(group);
+    } catch (err) {
         res.status(500).send({message: err.message});
-    });
+    }
 };
-exports.getGroupRoles = (req, res) => {
-    Group.findOne({
-        where: {
-            name: req.query.name
-        }
-    }).then(group => {
-        group.getRoles().then(roles => {
-            res.status(200).send(roles);
-        })
-    })
-    .catch(err => {
+exports.getGroupUsers = async(req, res) => {
+    try {
+        const users = await sequelize.query("SELECT users.id, users.username, users.email FROM users JOIN user_groups ON users.id=user_groups.userId WHERE user_groups.groupId=? ORDER BY user_groups.createdAt ASC;", {replacements:[req.query.group], type: QueryTypes.SELECT});
+        res.status(200).send(users);
+    } catch (err) {
         res.status(500).send({message: err.message});
-    })
+    }
+
 };
-exports.addUser = (req, res) => {
-    console.log(req);
-    Group.findOne({
-        where: {
-            name: req.body.groupname
-        }
-    }).then(group => {
-        User.findOne({
-            where: {
-                username: req.body.username
-            }
-        }).then(user => {
-            console.log(group);
-            console.log(user);
-            user.addGroup(group);
-        })
-        res.send({message: "User was added to group!"});
-    })
-    .catch(err => {
+exports.getGroupRoles = async(req, res) => {
+    try {
+        const roles = await sequelize.query("SELECT * FROM roles WHERE groupId=? ORDER BY createdAt ASC;", {replacements:[req.query.group], type: QueryTypes.SELECT});
+        res.status(200).send(roles);
+    } catch (err) {
         res.status(500).send({message: err.message});
-    });
+    }
 };
-exports.removeUser = (req, res) => {
-    Group.findOne({
-        where: {
-            name: req.body.groupname
-        }
-    }).then(group => {
-        User.findOne({
-            where: {
-                username: req.body.username
-            }
-        }).then(user => {
-            user.removeGroup(group);
-        })
-        res.send({message: "User was removed from grouP!"});
-    })
-    .catch(err => {
-        res.status(500).send({message:  err.message});
-    });
-};
-exports.deletegroup = (req, res) => {
-    Group.destroy({
-        where: {
-            name: req.body.groupname
-        }
-    }).then(response => {
-        if(response == 1) {
-            res.send({message: "Group was deleted!"});
-        }
-        else {
-            res.status(500).send({message: "Group could not be deleted!"});
-        }
-    }).catch(err => {
+exports.getUserRole = async(req, res) => {
+    try {
+        const role = await sequelize.query("SELECT * from roles WHERE id=some(SELECT roleId from user_roles WHERE userId=?) and groupId=?;", { replacements:[req.query.user, req.query.group], type: QueryTypes.SELECT});
+        res.status(200).send(role);
+    } catch (err) {
         res.status(500).send({message: err.message});
-    });  
+    }
+
 };
 
-exports.addRole = (req, res) => {
-    Role.create({
-        name: req.body.name,
-        canCreateTasks: req.body.canCreateTasks,
-        canEditTasks: req.body.canEditTasks,
-        canModMembers: req.body.canModMembers
-    })
-    .then(role => {
-        Group.findOne({
+
+exports.changeUserRole = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const user = await User.findOne({
+            where: {
+                username: req.body.username
+            }
+        }, {transaction: t});
+
+        await user.setRoles(req.body.roleId, {transaction: t});
+
+        await t.commit();
+    } catch (err) {
+        await t.rollback();
+        res.status(500).send({message: err.message});
+    }
+}
+exports.addUser = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const group = await Group.findOne({
             where: {
                 name: req.body.groupname
             }
-        })
-        .then(group => {
-            group.addRole(role);
-            res.status(200).send({message: "Role was created successfully!"});
-        })
-        .catch(err => {
-            res.status(500).send({message: err.message});
-        })
-    })
-    .catch(err => {
+        }, {transaction: t});
+
+        const user = await User.findOne({
+            where: {
+                username: req.body.username
+            }
+        }, {transaction: t});
+
+        await user.addGroup(group, {transaction: t});
+
+        await t.commit();
+        res.send({message: "User was added to group!"});
+    } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
-    })
+    }
+};
+exports.removeUser = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const group = await Group.findOne({
+            where: {
+                name: req.body.groupname
+            }
+        }, {transaction: t});
+
+        const user = await User.findOne({
+            where: {
+                username: req.body.username
+            }
+        }, {transaction: t});
+
+        await user.removeGroup(group, {transaction: t});
+
+        await t.commit();
+        res.send({message: "User was removed from grouP!"});
+    } catch (err) {
+        await t.rollback();
+        res.status(500).send({message:  err.message});
+    }
+};
+exports.deletegroup = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        await Group.destroy({
+            where: {
+                name: req.body.groupname
+            }
+        }, {transaction: t});
+
+        await t.commit();
+
+        res.send({message: "Group was deleted!"});
+    } catch (err) {
+        await t.rollback();
+        res.status(500).send({message: err.message});
+    }
 };
 
-exports.updateRole = (req, res) => {
-    Role.update({
-        name: req.body.name,
-        canCreateTasks: req.body.canCreateTasks,
-        canEditTasks: req.body.canEditTasks,
-        canModMembers: req.body.canModMembers
-    }, {
-        where: {
-            id: req.body.id
-        }
-    })
-    .then(role => {
+exports.addRole = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        const role = await Role.create({
+            name: req.body.name,
+            canCreateTasks: req.body.canCreateTasks,
+            canEditTasks: req.body.canEditTasks,
+            canModMembers: req.body.canModMembers
+        }, {transaction: t});
+
+        const group = await Group.findOne({
+            where: {
+                name: req.body.groupname
+            }
+        }, {transaction: t});
+
+        await group.addRole(role, {transaction: t});
+
+        await t.commit();
+        res.status(200).send({message: "Role was created successfully!"});
+    } catch (err) {
+        await t.rollback();
+        res.status(500).send({message: err.message});
+    }
+};
+
+exports.updateRole = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        await Role.update({
+            name: req.body.name,
+            canCreateTasks: req.body.canCreateTasks,
+            canEditTasks: req.body.canEditTasks,
+            canModMembers: req.body.canModMembers
+        }, {
+            where: {
+                id: req.body.id
+            }
+        }, {transaction: t});
+
+        await t.commit();
         res.status(200).send({message: "Role updated successfully!"});
-    })
-    .catch(err => {
+    } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
-    });
+    }
 };
 
-exports.deleteRole = (req, res) => {
-    Role.destroy({
-        where: {
-            id: req.body.id
-        }
-    })
-    .then(response => {
-        if(response == 1) {
-            res.send({message: "Role was deleted!"});
-        }
-        else {
-            res.status(500).send({message: "Role could not be deleted!"});
-        }
-    }).catch(err => {
+exports.deleteRole = async(req, res) => {
+    const t = await sequelize.transaction();
+    try {
+        await Role.destroy({
+            where: {
+                id: req.body.id
+            }
+        }, {transaction: t})
+
+        await t.commit();
+
+        res.send({message: "Role was deleted!"});
+    } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
-    });  
+    }
 };

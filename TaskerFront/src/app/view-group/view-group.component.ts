@@ -14,29 +14,72 @@ export class ViewGroupComponent implements OnInit {
     this.groupname = this.actRoute.snapshot.params['groupname'];
    }
   group: any;
-  groupusers: any[] = [];
+  grouproles: any[] = [];
+  groupusers: {
+    user: any,
+    role: any
+  }[] = [];
+  currentUser: any;
+  userRole: any;
   isOwner = false;
 
   ngOnInit(): void {
+    this.currentUser = this.groupService.getUser();
     this.groupService.getGroup(this.groupname).subscribe(
       data => {
         this.group = data;
-        if(this.groupService.getUser().username == this.group.owner_name) {
+        if(this.currentUser.username == this.group.owner_name) {
           this.isOwner = true;
         }
+        this.groupService.getGroupRoles(this.group.id).subscribe(
+          data => {
+            this.grouproles = data;
+          },
+          err => {
+            this.grouproles = JSON.parse(err.error).message;
+          }
+        )
+        this.groupService.getGroupUsers(this.group.id).subscribe(
+          data => {
+            data.forEach((element: any) => {
+              this.groupService.getUserRole(this.group.id, element.id).subscribe({
+                next: returnedRole => {
+                  let thisUser = {
+                    user: element,
+                    role: returnedRole[0]
+                  };
+                  if (thisUser.user.username == this.currentUser.username) {
+                    if(this.isOwner) {
+                      let ownerRole = {
+                        name: "Owner",
+                        canEditTasks: true,
+                        canCreateTasks: true,
+                        canModMembers: true
+                      }
+                      this.userRole = ownerRole;
+                    }
+                    else {
+                      this.userRole = thisUser.role;
+                    }
+                  }
+                  this.groupusers.push(thisUser);
+                },
+                error: err => {
+                }
+              });
+            });
+          },
+          err => {
+            this.groupusers = JSON.parse(err.error).message;
+          }
+        )
       },
       err => {
         this.group = JSON.parse(err.error).message;
       }
     )
-    this.groupService.getGroupUsers(this.groupname).subscribe(
-      data => {
-        this.groupusers = data;
-      },
-      err => {
-        this.groupusers = JSON.parse(err.error).message;
-      }
-    )
+    
+    
   }
 
   addUser(username: string): void {
@@ -88,4 +131,21 @@ export class ViewGroupComponent implements OnInit {
       }
     });
   }
+
+  changeRole(username: string, rolename: string): void {
+    const newRole = this.grouproles.find((role) => {
+      return role.name == rolename;
+    });
+    this.groupService.changeUserRole(username, newRole.id).subscribe({
+      next: data => {
+        console.log(data);
+        window.location.reload();
+      },
+      error: err => {
+        console.log(err);
+      }
+    });
+  }
 }
+
+

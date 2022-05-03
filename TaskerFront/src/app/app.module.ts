@@ -13,11 +13,11 @@ import { authInterceptorProviders } from '../_helpers/auth.interceptor';
 import { CreateGroupComponent } from './create-group/create-group.component';
 import { BoardGroupsComponent } from './board-groups/board-groups.component';
 import { ViewGroupComponent } from './view-group/view-group.component';
-// import { ViewGroupUserComponent } from './view-group-user/view-group-user.component';
 import { ViewGroupRolesComponent } from './view-group-roles/view-group-roles.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { CalendarComponent } from './calendar/calendar.component';
+import { MatMenuModule } from '@angular/material/menu';
 
 @NgModule({
   declarations: [
@@ -30,7 +30,6 @@ import { CalendarComponent } from './calendar/calendar.component';
     CreateGroupComponent,
     BoardGroupsComponent,
     ViewGroupComponent,
-    // ViewGroupUserComponent,
     ViewGroupRolesComponent,
     CalendarComponent,
   ],
@@ -40,7 +39,8 @@ import { CalendarComponent } from './calendar/calendar.component';
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    MatMenuModule
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

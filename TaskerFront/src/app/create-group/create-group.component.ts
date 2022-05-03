@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { GroupService } from 'src/_services/group.service';
 
 @Component({
@@ -14,7 +15,7 @@ export class CreateGroupComponent implements OnInit {
   isCreateFailed = false;
   errorMessage = '';
 
-  constructor(private groupService: GroupService) { }
+  constructor(private groupService: GroupService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -26,6 +27,7 @@ export class CreateGroupComponent implements OnInit {
         console.log(data);
         this.isSuccessful = true;
         this.isCreateFailed = false;
+        this.router.navigate(['/groups']);
       },
       error: err => {
         this.errorMessage = err.error.message;

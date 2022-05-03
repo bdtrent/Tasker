@@ -15,7 +15,9 @@ module.exports = function(app) {
     app.post("/api/group/addrole", [authJwt.verifyToken], controller.addRole);
     app.post("/api/group/updaterole", [authJwt.verifyToken], controller.updateRole);
     app.post("/api/group/deleterole", [authJwt.verifyToken], controller.deleteRole);
+    app.post("/api/group/changeuserrole", [authJwt.verifyToken], controller.changeUserRole);
     app.get("/api/group/get", [authJwt.verifyToken], controller.getGroup);
     app.get("/api/group/getusers", [authJwt.verifyToken], controller.getGroupUsers);
     app.get("/api/group/getroles", [authJwt.verifyToken], controller.getGroupRoles);
+    app.get("/api/group/getuserrole", [authJwt.verifyToken], controller.getUserRole);
 };
