@@ -1,10 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
     return sequelize.define('tasks', {
-        task_id: {
-            type: Sequelize.INTEGER,
-            autoIncrement: true,
-            primaryKey: true,
-        },
         name: {
             type: Sequelize.STRING,
         },
@@ -21,7 +16,14 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.INTEGER,
             references: {
                 model: sequelize.models.groups,
-                key: 'group_id'
+                key: 'groupId'
+            }
+        },
+        owner_name: {
+            type: Sequelize.STRING,
+            references: {
+                model: sequelize.models.users,
+                key: 'username',
             }
         }
     });
