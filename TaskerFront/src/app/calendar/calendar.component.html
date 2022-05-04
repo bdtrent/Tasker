@@ -8,7 +8,7 @@
 		<a class="calendar-day calendar-header" *ngFor="let day of weekdays">{{day[0]}}</a>
 	</div>
 	<div class="calendar-days">
-		<a class="calendar-day" [ngClass]="{'not-current-month': day.getMonth() != currentMonth.getMonth()}" *ngFor="let day of daysList" (click)="selectDay(day)">
+		<a class="calendar-day" [ngClass]="{'not-current-month': day.getMonth() != currentMonth.getMonth(), 'has-task': checkTasksForDay(day) }" *ngFor="let day of daysList" (click)="selectDay(day)">
 			{{ day.getDate() }}
 		</a>
 	</div>
@@ -16,6 +16,10 @@
 <div class="selected-day" *ngIf="selectedDay">
 	<div class="selected-day-header">{{selectedDay.toLocaleString('default', { month: 'long', day: 'numeric' })}}</div>
 	<ul *ngIf="selectedDayTasks != null">
-		<li *ngFor="let task of selectedDayTasks">{{task}}</li>
+		<li *ngFor="let task of selectedDayTasks">
+			<h4>{{ task.name }}</h4>
+			<div>{{ task.description }}</div>
+			<div>Due: {{ task.due_date.toLocaleString('default') }}</div>
+		</li>
 	</ul>
 </div>

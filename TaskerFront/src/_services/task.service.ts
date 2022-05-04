@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -10,11 +10,11 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  getTasksForMonth(month: number): Observable<any> {
+  getTasksForMonth(date: Date): Observable<any> {
     const options = {
-      params: new HttpParams().set('month', month)
+      headers: new HttpHeaders({ 'Content-Type': 'application/json' })
     };
-    return this.http.get(API_URL + 'get/month', options);
+    return this.http.get(API_URL + 'get/month?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1), options);
   }
 
 }

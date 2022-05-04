@@ -33,6 +33,10 @@ a:hover {
 	transition: 0.1s background-color;
 }
 
+.calendar-day.has-task {
+	background-color: #886;
+}
+
 .calendar-title {
 	display: flex;
 	align-items: center;

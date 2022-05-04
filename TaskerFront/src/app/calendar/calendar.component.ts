@@ -10,8 +10,8 @@ export class CalendarComponent implements OnInit {
 
   weekdays = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   selectedDay?: Date;
-  selectedDayTasks?: [string];
-  tasks?: [string];
+  selectedDayTasks?: any[];
+  tasks?: any[];
 
   currentMonth: Date;
 
@@ -23,8 +23,11 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.taskService.getTasksForMonth(new Date().getMonth()).subscribe(data => {
-      this.tasks = data;
+    this.taskService.getTasksForMonth(new Date()).subscribe((data: any[]) => {
+      this.tasks = data.map(task => {
+        task.due_date = new Date(task.due_date);
+        return task;
+      });
     });
     this.updateDayList();
   }
@@ -45,15 +48,31 @@ export class CalendarComponent implements OnInit {
 
   selectDay(d: Date) {
     this.selectedDay = d;
+    this.selectedDayTasks = this.tasks?.filter(task => {
+      let dueDate = task.due_date;
+      dueDate = new Date(dueDate.getFullYear(), dueDate.getMonth(), dueDate.getDay());
+      
+      return dueDate.valueOf() == d.valueOf();
+    })
   }
 
   navigateMonth(direction: number) {
     this.currentMonth.setMonth(this.currentMonth.getMonth() + direction);
     this.updateDayList();
+    this.taskService.getTasksForMonth(this.currentMonth).subscribe((data: any[]) => {
+      this.tasks = data.map(task => {
+        task.due_date = new Date(task.due_date);
+        return task;
+      });
+    });
   }
 
   getDaysInMonth(month: number) {
     return new Date(new Date().getFullYear(), month + 1, 0).getDate();
+  }
+
+  checkTasksForDay(date: Date) {
+    return this.tasks?.filter(t => { let d = new Date(t.due_date.getFullYear(), t.due_date.getMonth(), t.due_date.getDay()); return d.valueOf() == date.valueOf() }).length != 0
   }
 
 }
