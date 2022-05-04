@@ -58,6 +58,15 @@ export class ViewGroupComponent implements OnInit {
                       }
                       this.userRole = ownerRole;
                     }
+                    else if (returnedRole[0] == null){
+                      let noRole = {
+                        name: "None",
+                        canEditTasks: false,
+                        canCreateTasks: false,
+                        canModMembers: false
+                      }
+                      this.userRole = noRole;
+                    }
                     else {
                       this.userRole = thisUser.role;
                     }
