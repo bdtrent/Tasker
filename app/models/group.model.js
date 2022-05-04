@@ -11,6 +11,12 @@ module.exports = (sequelize, Sequelize) => {
         owner_name: {
             type: Sequelize.STRING
         }
+    }, {
+        indexes: [
+            {
+                fields: ['name']
+            }
+        ]
     });
     return Group;
 };

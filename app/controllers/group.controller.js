@@ -6,7 +6,10 @@ const Role = db.role;
 const User = db.user;
 const {QueryTypes, Transaction} = require('sequelize');
 exports.creategroup = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE});
+    t.afterCommit(() => {
+        res.status(200).send({message: "Group successfully created!"});
+    })
     try {
         const group = await Group.create({
             name: req.body.name,
@@ -29,39 +32,52 @@ exports.creategroup = async(req, res) => {
     }
 };
 exports.getGroup = async(req, res) => {
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         const group = await Group.findOne({
             where: {
                 name: req.query.name
             }
         });
+
+        await t.commit();
         res.status(200).send(group);
     } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
     }
 };
 exports.getGroupUsers = async(req, res) => {
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         const users = await sequelize.query("SELECT users.id, users.username, users.email FROM users JOIN user_groups ON users.id=user_groups.userId WHERE user_groups.groupId=? ORDER BY user_groups.createdAt ASC;", {replacements:[req.query.group], type: QueryTypes.SELECT});
+        await t.commit();
         res.status(200).send(users);
     } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
     }
 
 };
 exports.getGroupRoles = async(req, res) => {
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         const roles = await sequelize.query("SELECT * FROM roles WHERE groupId=? ORDER BY createdAt ASC;", {replacements:[req.query.group], type: QueryTypes.SELECT});
+        await t.commit();
         res.status(200).send(roles);
     } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
     }
 };
 exports.getUserRole = async(req, res) => {
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         const role = await sequelize.query("SELECT * from roles WHERE id=some(SELECT roleId from user_roles WHERE userId=?) and groupId=?;", { replacements:[req.query.user, req.query.group], type: QueryTypes.SELECT});
+        await t.commit();
         res.status(200).send(role);
     } catch (err) {
+        await t.rollback();
         res.status(500).send({message: err.message});
     }
 
@@ -69,7 +85,10 @@ exports.getUserRole = async(req, res) => {
 
 
 exports.changeUserRole = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
+    t.afterCommit(() => {
+        res.status(200).send({message: "User role changed successfully!"});
+    });
     try {
         const user = await User.findOne({
             where: {
@@ -86,7 +105,7 @@ exports.changeUserRole = async(req, res) => {
     }
 }
 exports.addUser = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         const group = await Group.findOne({
             where: {
@@ -110,7 +129,7 @@ exports.addUser = async(req, res) => {
     }
 };
 exports.removeUser = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         const group = await Group.findOne({
             where: {
@@ -134,7 +153,7 @@ exports.removeUser = async(req, res) => {
     }
 };
 exports.deletegroup = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         await Group.destroy({
             where: {
@@ -152,7 +171,7 @@ exports.deletegroup = async(req, res) => {
 };
 
 exports.addRole = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE});
     try {
         const role = await Role.create({
             name: req.body.name,
@@ -178,7 +197,7 @@ exports.addRole = async(req, res) => {
 };
 
 exports.updateRole = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         await Role.update({
             name: req.body.name,
@@ -200,7 +219,7 @@ exports.updateRole = async(req, res) => {
 };
 
 exports.deleteRole = async(req, res) => {
-    const t = await sequelize.transaction();
+    const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
     try {
         await Role.destroy({
             where: {

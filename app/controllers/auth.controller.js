@@ -8,39 +8,41 @@ var bcrypt = require("bcryptjs");
 const {Transaction} = require('sequelize');
 const { sequelize } = require("../models");
 exports.signup = async(req, res) => {
-  // Save User to Database
-  const t = await sequelize.transaction();
+  const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE});
+  t.afterCommit(() => {
+    res.send({message: "User was registered successfully!"});
+  })
   try {
     await User.create({
       username: req.body.username,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, 8)
-    }, {transaction: t})
+    }, {transaction: t});
 
     await t.commit();
-    res.send({ message: "User was registered successfully!" });
   } catch (err) {
     await t.rollback();
     res.status(500).send({ message: err.message });
   }
 };
 exports.signin = async(req, res) => {
-  const t = await sequelize.transaction();
   try {
-    const user = await User.findOne({
-      where: {
-        username: req.body.username
-      }
-    }, {transaction: t});
+    const result = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED}, async (t) => {
+      const user = await User.findOne({
+        where: {
+          username: req.body.username
+        }
+      }, {transaction: t});
 
-    await t.commit();
+      return user;
+    });
 
-    if (!user) {
+    if (!result) {
       return res.status(404).send({ message: "User Not found." });
     }
     var passwordIsValid = bcrypt.compareSync(
       req.body.password,
-      user.password
+      result.password
     );
     if (!passwordIsValid) {
       return res.status(401).send({
@@ -48,17 +50,16 @@ exports.signin = async(req, res) => {
         message: "Invalid Password!"
       });
     }
-    var token = jwt.sign({ id: user.id }, config.secret, {
+    var token = jwt.sign({ id: result.id }, config.secret, {
       expiresIn: 86400 // 24 hours
     });
     res.status(200).send({
-      id: user.id,
-      username: user.username,
-      email: user.email,
+      id: result.id,
+      username: result.username,
+      email: result.email,
       accessToken: token
     });
   } catch (err) {
-    await t.rollback();
     res.status(500).send({ message: err.message });
   }
 };

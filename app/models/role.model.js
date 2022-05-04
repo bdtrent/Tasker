@@ -12,6 +12,12 @@ module.exports = (sequelize, Sequelize) => {
         canModMembers: {
             type: Sequelize.BOOLEAN
         }
+    }, {
+        indexes: [
+            {
+                fields: ['groupId']
+            }
+        ]
     });
     return Role;
 };
