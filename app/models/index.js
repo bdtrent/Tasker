@@ -42,4 +42,5 @@ db.user.belongsToMany(db.role, {
 db.role.belongsToMany(db.user, {
     through: "user_roles"
 });
+db.task.belongsTo(db.group);
 module.exports = db;

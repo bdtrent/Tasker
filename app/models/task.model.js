@@ -12,13 +12,6 @@ module.exports = (sequelize, Sequelize) => {
         due_date: {
             type: Sequelize.DATE,
         },
-        group_id: {
-            type: Sequelize.INTEGER,
-            references: {
-                model: sequelize.models.groups,
-                key: 'groupId'
-            }
-        },
         owner_name: {
             type: Sequelize.STRING,
             references: {
