@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-const GROUP_API = 'http://localhost:8080/api/group/';
+const GROUP_API = 'http://api.purduetasker.com/api/group/';
 const USER_KEY = 'auth-user';
 const httpOptions = {
   headers: new HttpHeaders({ 'Content-Type': 'application/json' })

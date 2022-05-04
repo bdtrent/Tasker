@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-const API_URL = 'http://localhost:8080/api/task/';
+const API_URL = 'http://api.purduetasker.com/api/task/';
 @Injectable({
   providedIn: 'root'
 })
