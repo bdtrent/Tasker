@@ -10,12 +10,6 @@ module.exports = function(app) {
   });
   
   app.get("/api/task/get/month", [authJwt.verifyToken], tasks.getTaskForMonth);
-
-
-  app.get("/api/test/user/lists", [authJwt.verifyToken], lists.findAll);
-  app.get("/api/test/user/lists/:groupname", [authJwt.verifyToken], lists.findOne);  
-  app.post("/api/test/user/lists", [authJwt.verifyToken], lists.create);
-  app.put("/api/test/user/edit-list/:groupname", [authJwt.verifyToken], lists.update);
   // Retrieve a single task with id
   app.get("/api/test/user/lists/:groupname/tasks/:id", [authJwt.verifyToken], tasks.findOne);
   // Get all tasks in a specific list

@@ -38,7 +38,6 @@ db.user.belongsToMany(db.group, {
 // Team changes (close)
 // My Changes (open)
 // TODO: Need groups implemented
-db.task = require("../models/task.model.js")(sequelize, Sequelize);
 db.list = require("../models/list.model.js")(sequelize, Sequelize);
 
 // ASSIGNED
@@ -66,6 +65,14 @@ db.role.belongsToMany(db.user, {
 });
 // team changes open
 db.task.belongsTo(db.group);
+db.group.hasMany(db.task);
+
+db.task.belongsToMany(db.user, {
+    through: "user_tasks"
+});
+db.user.belongsToMany(db.task, {
+    through: "user_tasks"
+});
 // team chances close
 
 
@@ -75,41 +82,14 @@ db.task.belongsTo(db.group);
 // TODO: temporary stand-in for groups right now
 // OWNED
 // Lists to Users
-db.user.hasMany(db.list, { as: "lists" });
-// Users to Lists
-db.list.belongsTo(db.user, {
-    foreignKey: "listId",
-    as: "list",
-});
-
-// MEMBER
-// Users to Lists
-db.user.belongsToMany(db.list, {
-    through: "user_list",
-    foreignKey: "userId",
-    otherKey: "listId"
-});
-// Lists to Users
-db.list.belongsToMany(db.user, {
-    through: "user_list",
-    foreignKey: "listId",
-    otherKey: "userId"
-});
 
 // ASSIGNMENT
 // Lists to Tasks
 // Todo: Adjust these?
-db.list.hasMany(db.task, { as: "tasks" });
 // Tasks to Lists
-db.task.belongsTo(db.list, {
-    foreignKey: "taskId",
-    as: "task",
-});
 
 // TODO: need to implement HAS relationship between users/tasks
 // HAS
 
-
-db.ROLES = ["user", "admin", "moderator"];
 // my changes close
 module.exports = db;

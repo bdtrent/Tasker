@@ -3,12 +3,6 @@ module.exports = (sequelize, Sequelize) => {
         name: {
             type: Sequelize.STRING,
         },
-        description: {
-            type: Sequelize.TEXT,
-        },
-        assign_date: {
-            type: Sequelize.DATE,
-        },
         due_date: {
             type: Sequelize.DATE,
         },
