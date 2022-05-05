@@ -10,8 +10,6 @@ module.exports = function(app) {
   });
   
   app.get("/api/task/get/month", [authJwt.verifyToken], tasks.getTaskForMonth);
-  // Retrieve a single task with id
-  app.get("/api/task/get", [authJwt.verifyToken], tasks.findOne);
   app.get("/api/task/users", [authJwt.verifyToken], tasks.getUsers);
   app.get("/api/task/group", [authJwt.verifyToken], tasks.getGroupTasks);
   // Create a new task in a specific list

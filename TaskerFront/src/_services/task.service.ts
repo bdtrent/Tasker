@@ -2,7 +2,6 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Task } from 'src/app/models/task.model';
-import { List } from 'src/app/models/list.model';
 
 const API_URL = 'http://localhost:8080/api/task/';
 // const API_URL = 'http://api.purduetasker.com/api/task/';
