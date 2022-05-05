@@ -25,26 +25,6 @@ const routes: Routes = [
   { path: 'group/:groupname', component: ViewGroupComponent},
   { path: 'group/:groupname/roles', component: ViewGroupRolesComponent},
   { path: '', redirectTo: 'home', pathMatch: 'full' },
-
-// my changes
-  { path: 'user/lists', component: TaskViewComponent,
-          children: [
-            { 
-              path: ':groupname', 
-              component: TaskViewComponent,
-              children: [
-                { 
-                  path: 'add-task', 
-                  component: AddTaskComponent
-                },
-                { 
-                  path: 'edit-task/:taskId', 
-                  component: EditTaskComponent
-                },
-              ]
-             },
-          ]
-  },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
