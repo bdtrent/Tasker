@@ -1,0 +1,49 @@
+<div class="col-md-12">
+  <div class="card card-container">
+    <form
+      *ngIf="!isSuccessful"
+      name="form"
+      (ngSubmit)="f.form.valid && onSubmit()"
+      #f="ngForm"
+      novalidate
+    >
+      <div class="form-group">
+        <label for="name">Task Name</label>
+        <input
+          type="text"
+          class="form-control"
+          name="name"
+          [(ngModel)]="form.name"
+          required
+          minlength="3"
+          maxlength="180"
+          #name="ngModel"
+        />
+        <div class="alert-danger" *ngIf="name.errors && f.submitted">
+          <div *ngIf="name.errors['required']">Task Name is required</div>
+          <div *ngIf="name.errors['minlength']">
+            Task Name must be at least 3 characters
+          </div>
+          <div *ngIf="name.errors['maxlength']">
+            Task Name must be at most 180 characters
+          </div>
+        </div>
+
+        <mat-label>Due date</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="form.dueDate">
+        <mat-hint>MM/DD/YYYY</mat-hint>
+        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </div>
+      <div class="form-group">
+        <button class="btn btn-primary btn-block">Create Task</button>
+      </div>
+      <div class="alert alert-warning" *ngIf="f.submitted && isCreateFailed">
+        Creation failed!<br />{{ errorMessage }}
+      </div>
+    </form>
+    <div class="alert alert-success" *ngIf="isSuccessful">
+      Your task was successfully created!
+    </div>
+  </div>
+</div>

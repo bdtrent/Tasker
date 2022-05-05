@@ -12,10 +12,17 @@ exports.getTaskForMonth = async (req, res) => {
 		return;
 	}
 
-	let [results, meta] = await sequelize.query('SELECT name, description, due_date FROM tasks WHERE YEAR(due_date)=? AND MONTH(due_date)=?', {
-		replacements: [Number(req.query.year), Number(req.query.month)]
-	});
-	res.send(results);
+  const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.READ_COMMITTED});
+  try {
+    let [results, meta] = await sequelize.query('SELECT name, description, due_date FROM tasks WHERE YEAR(due_date)=? AND MONTH(due_date)=?', {
+      replacements: [Number(req.query.year), Number(req.query.month)]
+    });
+    await t.commit();
+    res.status(200).send(results);
+  } catch (err) {
+    await t.rollback();
+    res.status(500).send({message: err.message});
+  }
 }
 
 exports.getUsers = (req, res) => {
