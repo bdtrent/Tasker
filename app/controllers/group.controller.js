@@ -5,6 +5,7 @@ const Group = db.group;
 const Role = db.role;
 const User = db.user;
 const {QueryTypes, Transaction} = require('sequelize');
+
 exports.creategroup = async(req, res) => {
     const t = await sequelize.transaction({isolationLevel: Transaction.ISOLATION_LEVELS.SERIALIZABLE});
     t.afterCommit(() => {

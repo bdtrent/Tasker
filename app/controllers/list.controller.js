@@ -1,24 +1,7 @@
-const { sequelize } = require("../models");
 const db = require("../models");
-
 const List = db.list;
 const Op = db.Sequelize.Op;
 
-exports.getTaskForMonth = async (req, res) => {
-	if (!('year' in req.query && 'month' in req.query)) {
-		res.status(400);
-		res.send('Invalid usage');
-		return;
-	}
-
-	let [results, meta] = await sequelize.query('SELECT name, description, due_date FROM tasks WHERE YEAR(due_date)=? AND MONTH(due_date)=?', {
-		replacements: [Number(req.query.year), Number(req.query.month)]
-	});
-	res.send(results);
-}
-
-
-// ------------------------------------------------------
 // /**
 //  * GET /lists
 //  * Purpose: Get all lists
@@ -40,7 +23,7 @@ exports.findAll = (req, res) => {
   const title = req.query.title;
   var condition = title ? { title: { [Op.like]: `%${title}%` } } : null;
     // TODO: incorporate condition at all?
-    Task.findAll({ where: condition })
+    List.findAll({ where: condition })
     // List.findAll({ 
     //   // TODO: fix this later
     //   _userId: req.user_id
@@ -51,26 +34,26 @@ exports.findAll = (req, res) => {
     .catch(err => {
       res.status(500).send({
         message:
-          err.message || "Some error occurred while retrieving tasks."
+          err.message || "Some error occurred while retrieving lists."
       });
     });
 };
 
 exports.findOne = (req, res) => {
   const id = req.params.id;
-  Task.findByPk(id)
+  List.findByPk(id)
     .then(data => {
       if (data) {
         res.send(data);
       } else {
         res.status(404).send({
-          message: `Cannot find Task with id=${id}.`
+          message: `Cannot find List with id=${id}.`
         });
       }
     })
     .catch(err => {
       res.status(500).send({
-        message: "Error retrieving Task with id=" + id
+        message: "Error retrieving List with id=" + id
       });
     });
 };
@@ -94,7 +77,6 @@ exports.findOne = (req, res) => {
 //     })
 // });
 
-// TODO: Update this with correct task model
 // Create and Save a new list
 exports.create = (req, res) => {
     
@@ -106,15 +88,15 @@ exports.create = (req, res) => {
       return;
     }
     // Create a list
-    const task = {
+    const list = {
       // TODO: update db to reflect title field
-      	title: req.body.title,
+      title: req.body.title,
 	  // TODO: Should reflect id of group this list belongs to?
-		taskId: req.id,
+	    listId: req.id,
     };
 
     // Save task in the database
-    List.create(task)
+    List.create(list)
       .then(data => {
         res.send(data);
       })
@@ -139,10 +121,10 @@ exports.create = (req, res) => {
 //     });
 // });
 
-// Update a task by the id in the request
+// Update a list by the id in the request
 exports.update = (req, res) => {
     const id = req.params.id;
-    Task.update(req.body, {
+    List.update(req.body, {
       where: { id: id }
     })
       .then(num => {
@@ -152,13 +134,13 @@ exports.update = (req, res) => {
           });
         } else {
           res.send({
-            message: `Cannot update task with id=${id}. Maybe task was not found or req.body is empty!`
+            message: `Cannot update list with id=${id}. Maybe list was not found or req.body is empty!`
           });
         }
       })
       .catch(err => {
         res.status(500).send({
-          message: "Error updating task with id=" + id
+          message: "Error updating list with id=" + id
         });
       });
 };

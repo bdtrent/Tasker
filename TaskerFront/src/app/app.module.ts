@@ -15,9 +15,15 @@ import { BoardGroupsComponent } from './board-groups/board-groups.component';
 import { ViewGroupComponent } from './view-group/view-group.component';
 import { ViewGroupRolesComponent } from './view-group-roles/view-group-roles.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatExpansionModule } from '@angular/material/expansion';       // TODO: How to import properly?
 import { CalendarComponent } from './calendar/calendar.component';
 import { MatMenuModule } from '@angular/material/menu';
+import { EditListComponent } from './edit-list/edit-list.component';
+import { EditTaskComponent } from './edit-task/edit-task.component';
+import { TaskViewComponent } from './task-view/task-view.component';
+import { AddTaskComponent } from './add-task/add-task.component';
+import { AddListComponent } from './add-list/add-list.component';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [
@@ -26,12 +32,17 @@ import { MatMenuModule } from '@angular/material/menu';
     RegisterComponent,
     HomeComponent,
     ProfileComponent,
-    BoardUserComponent,
     CreateGroupComponent,
     BoardGroupsComponent,
     ViewGroupComponent,
     ViewGroupRolesComponent,
     CalendarComponent,
+    BoardUserComponent,
+    EditListComponent,
+    EditTaskComponent,
+    TaskViewComponent,
+    AddTaskComponent,
+    AddListComponent
   ],
   imports: [
     BrowserModule,
@@ -40,7 +51,8 @@ import { MatMenuModule } from '@angular/material/menu';
     HttpClientModule,
     BrowserAnimationsModule,
     MatExpansionModule,
-    MatMenuModule
+    MatMenuModule,
+    RouterModule,
   ],
   providers: [authInterceptorProviders],
   bootstrap: [AppComponent]

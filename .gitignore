@@ -1,3 +1,9 @@
+<<<<<<< Updated upstream
 meanapi
 node_modules
 app/config
+=======
+/meanapi
+/node_modules
+/app/config
+>>>>>>> Stashed changes

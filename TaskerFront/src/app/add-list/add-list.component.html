@@ -1,0 +1,49 @@
+<div class="centered-content">
+    <div class="modal-box">
+      <h1 class="title">
+        Create a new list
+      </h1>
+      <input #listTitleInput class="input has-background-light is-medium" type="text" placeholder="Enter list name...">
+      <br><br>
+      <div class="buttons is-right">
+        <button class="button is-medium" routerLink="/">Cancel</button>
+        <button class="button is-primary has-text-white is-medium" (click)="createList(listTitleInput.value)">Create</button>
+      </div>    
+    </div>
+</div>
+
+
+
+<!-- <div>
+    <div class="submit-form">
+      <div *ngIf="!submitted">
+        <div class="form-group">
+          <label for="title">Title</label>
+          <input
+            type="text"
+            class="form-control"
+            id="title"
+            required
+            [(ngModel)]="tutorial.title"
+            name="title"
+          />
+        </div>
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input
+            class="form-control"
+            id="description"
+            required
+            [(ngModel)]="tutorial.description"
+            name="description"
+          />
+        </div>
+        <button (click)="saveTutorial()" class="btn btn-success">Submit</button>
+      </div>
+      <div *ngIf="submitted">
+        <h4>Tutorial was submitted successfully!</h4>
+        <button class="btn btn-success" (click)="newTutorial()">Add</button>
+      </div>
+    </div>
+</div>
+   -->
