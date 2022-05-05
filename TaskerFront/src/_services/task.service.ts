@@ -7,7 +7,10 @@ import { List } from 'src/app/models/list.model';
 const API_URL = 'http://localhost:8080/api/task/';
 // const API_URL = 'http://api.purduetasker.com/api/task/';
 
-const baseUrl = 'http://localhost:4200/api/task/';
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
+
 @Injectable({
   providedIn: 'root'
 })
@@ -21,48 +24,37 @@ export class TaskService {
     };
     return this.http.get(API_URL + 'get/month?year=' + date.getFullYear() + '&month=' + (date.getMonth()+1), options);
   }
-
-  // my changes -----------------------------
-  getLists(): Observable<List[]> {
-    return this.http.get<List[]>('lists');
+  
+  create(name: string, due_date: Date, owner_name: string): Observable<any> {
+    return this.http.post(API_URL + 'create', {
+      name,
+      due_date,
+      owner_name
+    }, httpOptions);
   }
 
-  createList(title: string) {
-    // We want to send a web request to create a list
-    return this.http.post('lists', { title });
+  update(task: number, name: string, due_date: Date): Observable<any> {
+    return this.http.post(API_URL + 'update', {
+      task,
+      name,
+      due_date
+    }, httpOptions);
   }
 
-  updateList(id: string, title: string) {
-    // We want to send a web request to update a list
-    return this.http.patch(`lists/${id}`, { title });
+  delete(task: number): Observable<any> {
+    return this.http.post(API_URL + 'delete', {
+      task
+    }, httpOptions);
   }
 
-  updateTask(listId: string, taskId: string, title: string) {
-    // We want to send a web request to update a list
-    return this.http.patch(`lists/${listId}/tasks/${taskId}`, { title });
+  getGroupTasks(groupId: number): Observable<any> {
+    const options = {params: new HttpParams().set('group', groupId)};
+    return this.http.get(API_URL + 'group', options);
   }
 
-  deleteTask(listId: string, taskId: string) {
-    return this.http.delete(`lists/${listId}/tasks/${taskId}`);
-  }
-
-  deleteList(id: string) {
-    return this.http.delete(`lists/${id}`);
-  }
-
-  getTasks(listId: string): Observable<Task[]> {
-    return this.http.get<Task[]>(`lists/${listId}/tasks`);
-  }
-
-  createTask(title: string, listId: string) {
-    // We want to send a web request to create a task
-    return this.http.post(`lists/${listId}/tasks`, { title });
-  }
-
-  complete(task: Task) {
-    return this.http.patch(`lists/${task.listId}/tasks/${task.id}`, {
-      completed: !task.completed
-    });
+  getTaskUsers(taskId: number){
+    const options = {params: new HttpParams().set('task', taskId)};
+    return this.http.get(API_URL + 'users', options);
   }
 
 }
